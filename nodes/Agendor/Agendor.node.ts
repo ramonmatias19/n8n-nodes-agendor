@@ -25,6 +25,7 @@ export class Agendor implements INodeType {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
+				Authorization: '=Token {{$credentials.apiToken}}',
 			},
 		},
 		properties: [

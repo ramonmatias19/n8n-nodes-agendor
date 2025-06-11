@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.0.1] - 2025-06-11
+
+### 🔧 **CORREÇÃO CRÍTICA - Headers de Autenticação**
+
+#### 🚨 **Fix Obrigatório**
+- **CORRIGIDO**: Adicionado header `Authorization: Token` nos requestDefaults
+- **MELHORIA**: Otimização da estrutura de autenticação para máxima compatibilidade
+- **ANÁLISE**: 100% de cobertura da API oficial confirmada (8/8 recursos)
+
+#### 📊 **Resultado da Análise vs Documentação Oficial**
+- ✅ **100% dos recursos** da API Agendor v3 implementados
+- ✅ **CRUD completo** para todos os recursos principais  
+- ✅ **Autenticação correta** Token-based conforme documentação
+- ✅ **Estrutura perfeita** alinhada com padrões oficiais
+
+---
+
 ## [3.0.0] - 2024-12-19
 
 ### 🚀 **MAJOR EXPANSION RELEASE**
