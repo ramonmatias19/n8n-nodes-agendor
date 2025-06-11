@@ -1,0 +1,17 @@
+{
+	"node": "n8n-nodes-agendor-solo.AgendorTrigger",
+	"nodeVersion": "1.0",
+	"codex": {
+		"categories": ["Sales & CRM"],
+		"subcategories": {
+			"Sales & CRM": ["Webhooks"]
+		},
+		"resources": {
+			"primaryDocumentation": [
+				{
+					"url": "https://api.agendor.com.br/docs/"
+				}
+			]
+		}
+	}
+} 

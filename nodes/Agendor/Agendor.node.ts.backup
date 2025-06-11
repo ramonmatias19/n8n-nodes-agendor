@@ -1,0 +1,849 @@
+import { INodeType, INodeTypeDescription, NodeConnectionType } from 'n8n-workflow';
+
+export class Agendor implements INodeType {
+	description: INodeTypeDescription = {
+		displayName: 'Agendor',
+		name: 'agendor',
+		icon: 'file:logo.svg',
+		group: ['transform'],
+		version: 1,
+		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
+		description: 'Trabalhe com dados da API do Agendor CRM',
+		defaults: {
+			name: 'Agendor',
+		},
+		inputs: [NodeConnectionType.Main],
+		outputs: [NodeConnectionType.Main],
+		credentials: [
+			{
+				name: 'AgendorApi',
+				required: true,
+			},
+		],
+		requestDefaults: {
+			baseURL: 'https://api.agendor.com.br/v3',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+		},
+		properties: [
+			// Resource selector
+			{
+				displayName: 'Resource',
+				name: 'resource',
+				type: 'options',
+				noDataExpression: true,
+				options: [
+					{
+						name: 'User',
+						value: 'users',
+						description: 'Gerenciar usuários',
+					},
+					{
+						name: 'Organization',
+						value: 'organizations',
+						description: 'Gerenciar organizações/empresas',
+					},
+					{
+						name: 'Person',
+						value: 'people',
+						description: 'Gerenciar pessoas/contatos',
+					},
+					{
+						name: 'Deal',
+						value: 'deals',
+						description: 'Gerenciar negócios/oportunidades',
+					},
+				],
+				default: 'people',
+			},
+
+			// ===========================================
+			// USERS OPERATIONS
+			// ===========================================
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['users'],
+					},
+				},
+				options: [
+					{
+						name: 'Get Many',
+						value: 'getMany',
+						action: 'Listar usu�rios',
+						description: 'Recuperar múltiplos usuários',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '/users',
+							},
+						},
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						action: 'Obter usu�rio',
+						description: 'Obter um usuário específico por ID',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '=/users/{{$parameter["userId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						action: 'Atualizar usu�rio',
+						description: 'Atualizar informações do usuário',
+						routing: {
+							request: {
+								method: 'PUT',
+								url: '=/users/{{$parameter["userId"]}}',
+							},
+						},
+					},
+				],
+				default: 'getMany',
+			},
+
+			// User ID field for get/update operations
+			{
+				displayName: 'User ID',
+				name: 'userId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['users'],
+						operation: ['get', 'update'],
+					},
+				},
+				default: '',
+				description: 'O ID do usuário (formato numérico)',
+				placeholder: '12345',
+			},
+
+			// ===========================================
+			// ORGANIZATIONS OPERATIONS
+			// ===========================================
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['organizations'],
+					},
+				},
+				options: [
+					{
+						name: 'Get Many',
+						value: 'getMany',
+						action: 'Listar organiza��es',
+						description: 'Recuperar múltiplas organizações',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '/organizations',
+							},
+						},
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						action: 'Obter organiza��o',
+						description: 'Obter uma organização específica por ID',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '=/organizations/{{$parameter["organizationId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Create',
+						value: 'create',
+						action: 'Criar organiza��o',
+						description: 'Criar uma nova organização',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/organizations',
+							},
+						},
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						action: 'Atualizar organiza��o',
+						description: 'Atualizar informações da organização',
+						routing: {
+							request: {
+								method: 'PUT',
+								url: '=/organizations/{{$parameter["organizationId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						action: 'Deletar organiza��o',
+						description: 'Deletar uma organização',
+						routing: {
+							request: {
+								method: 'DELETE',
+								url: '=/organizations/{{$parameter["organizationId"]}}',
+							},
+						},
+					},
+				],
+				default: 'getMany',
+			},
+
+			// Organization ID field
+			{
+				displayName: 'Organization ID',
+				name: 'organizationId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['organizations'],
+						operation: ['get', 'update', 'delete'],
+					},
+				},
+				default: '',
+				description: 'O ID da organização (formato numérico)',
+				placeholder: '12345',
+			},
+
+			// Organization fields for create/update
+			{
+				displayName: 'Name',
+				name: 'name',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['organizations'],
+						operation: ['create', 'update'],
+					},
+				},
+				default: '',
+				description: 'Nome da organização',
+				placeholder: 'Empresa ABC Ltda',
+				routing: {
+					send: {
+						type: 'body',
+						property: 'name',
+					},
+				},
+			},
+
+			// ===========================================
+			// PEOPLE OPERATIONS
+			// ===========================================
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['people'],
+					},
+				},
+				options: [
+					{
+						name: 'Get Many',
+						value: 'getMany',
+						action: 'Listar pessoas',
+						description: 'Recuperar múltiplas pessoas',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '/people',
+							},
+						},
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						action: 'Obter pessoa',
+						description: 'Obter uma pessoa específica por ID',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '=/people/{{$parameter["personId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Create',
+						value: 'create',
+						action: 'Criar pessoa',
+						description: 'Criar uma nova pessoa',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/people',
+							},
+						},
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						action: 'Atualizar pessoa',
+						description: 'Atualizar informações da pessoa',
+						routing: {
+							request: {
+								method: 'PUT',
+								url: '=/people/{{$parameter["personId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						action: 'Deletar pessoa',
+						description: 'Deletar uma pessoa',
+						routing: {
+							request: {
+								method: 'DELETE',
+								url: '=/people/{{$parameter["personId"]}}',
+							},
+						},
+					},
+				],
+				default: 'getMany',
+			},
+
+			// Person ID field
+			{
+				displayName: 'Person ID',
+				name: 'personId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['people'],
+						operation: ['get', 'update', 'delete'],
+					},
+				},
+				default: '',
+				description: 'O ID da pessoa (formato numérico)',
+				placeholder: '12345',
+			},
+
+			// Person fields for create/update
+			{
+				displayName: 'Name',
+				name: 'name',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['people'],
+						operation: ['create', 'update'],
+					},
+				},
+				default: '',
+				description: 'Nome da pessoa',
+				placeholder: 'João Silva',
+				routing: {
+					send: {
+						type: 'body',
+						property: 'name',
+					},
+				},
+			},
+
+			{
+				displayName: 'Email',
+				name: 'email',
+				type: 'string',
+				typeOptions: {
+					validation: [
+						{
+							type: 'regex',
+							properties: {
+								regex: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+								errorMessage: 'Por favor insira um email válido',
+							},
+						},
+					],
+				},
+				displayOptions: {
+					show: {
+						resource: ['people'],
+						operation: ['create', 'update'],
+					},
+				},
+				default: '',
+				description: 'Endereço de email da pessoa',
+				placeholder: 'joao@empresa.com',
+				routing: {
+					send: {
+						type: 'body',
+						property: 'email',
+					},
+				},
+			},
+
+			// ===========================================
+			// DEALS OPERATIONS
+			// ===========================================
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['deals'],
+					},
+				},
+				options: [
+					{
+						name: 'Get Many',
+						value: 'getMany',
+						action: 'Listar neg�cios',
+						description: 'Recuperar múltiplos negócios',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '/deals',
+							},
+						},
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						action: 'Obter neg�cio',
+						description: 'Obter um negócio específico por ID',
+						routing: {
+							request: {
+								method: 'GET',
+								url: '=/deals/{{$parameter["dealId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Create',
+						value: 'create',
+						action: 'Criar neg�cio',
+						description: 'Criar um novo negócio',
+						routing: {
+							request: {
+								method: 'POST',
+								url: '/deals',
+							},
+						},
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						action: 'Atualizar neg�cio',
+						description: 'Atualizar informações do negócio',
+						routing: {
+							request: {
+								method: 'PUT',
+								url: '=/deals/{{$parameter["dealId"]}}',
+							},
+						},
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						action: 'Deletar neg�cio',
+						description: 'Deletar um negócio',
+						routing: {
+							request: {
+								method: 'DELETE',
+								url: '=/deals/{{$parameter["dealId"]}}',
+							},
+						},
+					},
+				],
+				default: 'getMany',
+			},
+
+			// Deal ID field
+			{
+				displayName: 'Deal ID',
+				name: 'dealId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['deals'],
+						operation: ['get', 'update', 'delete'],
+					},
+				},
+				default: '',
+				description: 'O ID do negócio (formato numérico)',
+				placeholder: '12345',
+			},
+
+			// Deal fields for create/update
+			{
+				displayName: 'Title',
+				name: 'title',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['deals'],
+						operation: ['create', 'update'],
+					},
+				},
+				default: '',
+				description: 'Título do negócio',
+				placeholder: 'Venda de Software - Empresa ABC',
+				routing: {
+					send: {
+						type: 'body',
+						property: 'title',
+					},
+				},
+			},
+
+			{
+				displayName: 'Value',
+				name: 'value',
+				type: 'number',
+				typeOptions: {
+					minValue: 0,
+					numberStepSize: 0.01,
+				},
+				displayOptions: {
+					show: {
+						resource: ['deals'],
+						operation: ['create', 'update'],
+					},
+				},
+				default: 0,
+				description: 'Valor do negócio em centavos (ex: 1000 = R$ 10,00)',
+				placeholder: '50000',
+				routing: {
+					send: {
+						type: 'body',
+						property: 'value',
+					},
+				},
+			},
+
+			// ===========================================
+			// ADDITIONAL OPTIONS
+			// ===========================================
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Adicionar Campo',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: ['create', 'update'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Description',
+						name: 'description',
+						type: 'string',
+						typeOptions: {
+							rows: 3,
+						},
+						default: '',
+						description: 'Descrição do item',
+						placeholder: 'Detalhes adicionais sobre...',
+						routing: {
+							send: {
+								type: 'body',
+								property: 'description',
+							},
+						},
+					},
+					{
+						displayName: 'Phone',
+						name: 'phone',
+						type: 'string',
+						default: '',
+						description: 'Número de telefone',
+						placeholder: '(11) 99999-9999',
+						displayOptions: {
+							show: {
+								'/resource': ['people', 'organizations'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'phone',
+							},
+						},
+					},
+					{
+						displayName: 'Website',
+						name: 'website',
+						type: 'string',
+						default: '',
+						description: 'URL do website',
+						placeholder: 'https://www.exemplo.com.br',
+						displayOptions: {
+							show: {
+								'/resource': ['organizations'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'website',
+							},
+						},
+					},
+					{
+						displayName: 'Address',
+						name: 'address',
+						type: 'string',
+						default: '',
+						description: 'Endereço completo',
+						placeholder: 'Rua das Flores, 123 - São Paulo/SP',
+						displayOptions: {
+							show: {
+								'/resource': ['people', 'organizations'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'address',
+							},
+						},
+					},
+					{
+						displayName: 'CNPJ',
+						name: 'cnpj',
+						type: 'string',
+						default: '',
+						description: 'CNPJ da organização (apenas números)',
+						placeholder: '12345678000199',
+						displayOptions: {
+							show: {
+								'/resource': ['organizations'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'cnpj',
+							},
+						},
+					},
+					{
+						displayName: 'CPF',
+						name: 'cpf',
+						type: 'string',
+						default: '',
+						description: 'CPF da pessoa (apenas números)',
+						placeholder: '12345678900',
+						displayOptions: {
+							show: {
+								'/resource': ['people'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'cpf',
+							},
+						},
+					},
+					{
+						displayName: 'Organization ID',
+						name: 'organizationId',
+						type: 'string',
+						default: '',
+						description: 'ID da organização à qual esta pessoa pertence',
+						placeholder: '12345',
+						displayOptions: {
+							show: {
+								'/resource': ['people'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'organizationId',
+							},
+						},
+					},
+					{
+						displayName: 'Person ID',
+						name: 'personId',
+						type: 'string',
+						default: '',
+						description: 'ID da pessoa responsável por este negócio',
+						placeholder: '12345',
+						displayOptions: {
+							show: {
+								'/resource': ['deals'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'personId',
+							},
+						},
+					},
+					{
+						displayName: 'Organization ID',
+						name: 'organizationId',
+						type: 'string',
+						default: '',
+						description: 'ID da organização relacionada a este negócio',
+						placeholder: '12345',
+						displayOptions: {
+							show: {
+								'/resource': ['deals'],
+							},
+						},
+						routing: {
+							send: {
+								type: 'body',
+								property: 'organizationId',
+							},
+						},
+					},
+				],
+			},
+
+			// Query parameters for list operations
+			{
+				displayName: 'Options',
+				name: 'options',
+				type: 'collection',
+				placeholder: 'Adicionar Opção',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: ['getMany'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Page',
+						name: 'page',
+						type: 'number',
+						typeOptions: {
+							minValue: 1,
+						},
+						default: 1,
+						description: 'Número da página a recuperar',
+						routing: {
+							send: {
+								type: 'query',
+								property: 'page',
+							},
+						},
+					},
+					{
+						displayName: 'Per Page',
+						name: 'perPage',
+						type: 'number',
+						typeOptions: {
+							minValue: 1,
+							maxValue: 100,
+						},
+						default: 20,
+						description: 'Número de itens por página (máximo 100)',
+						routing: {
+							send: {
+								type: 'query',
+								property: 'per_page',
+							},
+						},
+					},
+					{
+						displayName: 'Search',
+						name: 'search',
+						type: 'string',
+						default: '',
+						description: 'Termo de busca para filtrar os resultados',
+						placeholder: 'João Silva',
+						routing: {
+							send: {
+								type: 'query',
+								property: 'search',
+							},
+						},
+					},
+					{
+						displayName: 'Order By',
+						name: 'orderBy',
+						type: 'options',
+						options: [
+							{
+								name: 'ID',
+								value: 'id',
+							},
+							{
+								name: 'Nome',
+								value: 'name',
+							},
+							{
+								name: 'Criado Em',
+								value: 'created_at',
+							},
+							{
+								name: 'Atualizado Em',
+								value: 'updated_at',
+							},
+						],
+						default: 'id',
+						description: 'Campo para ordenação dos resultados',
+						routing: {
+							send: {
+								type: 'query',
+								property: 'order_by',
+							},
+						},
+					},
+					{
+						displayName: 'Order Direction',
+						name: 'orderDirection',
+						type: 'options',
+						options: [
+							{
+								name: 'Crescente',
+								value: 'asc',
+							},
+							{
+								name: 'Decrescente',
+								value: 'desc',
+							},
+						],
+						default: 'asc',
+						description: 'Direção da ordenação',
+						routing: {
+							send: {
+								type: 'query',
+								property: 'order_direction',
+							},
+						},
+					},
+				],
+			},
+		],
+	};
+}

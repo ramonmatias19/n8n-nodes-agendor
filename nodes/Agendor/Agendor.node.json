@@ -1,0 +1,20 @@
+{
+	"node": "n8n-nodes-base.agendor",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": [
+		"Sales & CRM"
+	],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://api.agendor.com.br/docs/"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://api.agendor.com.br/docs/"
+			}
+		]
+	}
+}
