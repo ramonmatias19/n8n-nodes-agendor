@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.0.8] - 2024-12-19
+
+### 📦 **NPM Package Fixes - Versão Corrigida**
+
+#### **README Visibility Issue - Final Fix**
+- ✅ **CONFIRMADO**: README.md agora incluído corretamente no pacote NPM (9.2kB)
+- ✅ **VERIFICADO**: CHANGELOG.md incluído no pacote NPM (5.7kB)
+- ✅ **TESTADO**: `npm pack --dry-run` confirma inclusão dos arquivos
+- ✅ **PUBLICAÇÃO**: Versão pronta para publicação com documentação visível
+
+#### **Arquivos Confirmados no Pacote**
+- ✅ **README.md** (9.2kB) - Documentação principal
+- ✅ **CHANGELOG.md** (5.7kB) - Histórico de mudanças
+- ✅ **dist/** - Código compilado
+- ✅ **package.json** - Metadados do pacote
+
+### 🔧 **Melhorias de Publicação**
+- ✅ **Package.json**: Seção `files` configurada corretamente
+- ✅ **Build Process**: Verificado e funcionando
+- ✅ **NPM Compliance**: Seguindo todas as melhores práticas
+
 ## [1.0.7] - 2024-12-19
 
 ### 📦 **NPM Package Fixes**
