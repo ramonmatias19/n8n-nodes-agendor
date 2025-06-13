@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.0.7] - 2024-12-19
+
+### 📦 **NPM Package Fixes**
+
+#### **README Visibility Issue**
+- ✅ **CORRIGIDO**: README.md não aparecia na página do NPM
+- ✅ **ADICIONADO**: README.md e CHANGELOG.md aos arquivos do pacote
+- ✅ **MELHORADO**: Documentação agora visível para usuários do NPM
+- ✅ **CONFORMIDADE**: Seguindo melhores práticas de publicação NPM
+
+#### **Análise de Conformidade vs Documentação Oficial**
+- ✅ **Base URL**: `https://api.agendor.com.br/v3` (correto)
+- ✅ **Autenticação**: `Token {{apiToken}}` (correto)
+- ✅ **Endpoints**: Todos conforme documentação oficial
+- ✅ **Estrutura**: 100% compatível com API oficial
+
+### 🔧 **Melhorias Técnicas**
+- ✅ **Package.json**: Configuração correta da seção `files`
+- ✅ **Documentação**: Melhor experiência para novos usuários
+- ✅ **Visibilidade**: README agora aparece corretamente no NPM
+
 ## [3.0.1] - 2025-06-11
 
 ### 🔧 **CORREÇÃO CRÍTICA - Headers de Autenticação**

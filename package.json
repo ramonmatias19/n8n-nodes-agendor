@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-agendor",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Node customizado do n8n para integração com Agendor CRM",
   "keywords": [
     "n8n-community-node-package",
@@ -33,7 +33,9 @@
     "release": "npm run release:patch"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
