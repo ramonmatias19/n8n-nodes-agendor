@@ -1,11 +1,11 @@
 ﻿import { INodeType, INodeTypeDescription, NodeConnectionType } from 'n8n-workflow';
 
 export class Agendor implements INodeType {
-	description: INodeTypeDescription = {
+	description: INodeTypeDescription & { usableAsTool?: boolean } = {
 		displayName: 'Agendor',
 		name: 'agendor',
 		icon: 'file:logo.svg',
-		group: ['transform'],
+		group: ['tool'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Trabalhe com dados da API do Agendor CRM',
@@ -14,6 +14,7 @@ export class Agendor implements INodeType {
 		},
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
+		usableAsTool: true,
 		credentials: [
 			{
 				name: 'agendorApi',

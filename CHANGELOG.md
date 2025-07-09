@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.1.0] - 2025-12-27
+
+### ✨ Added
+- **🤖 AI Agent Tool Support**: Node agora compatível como Tool no AI Agent do n8n
+  - **IMPLEMENTADO**: Propriedade `usableAsTool: true` na configuração do node
+  - **GRUPO ATUALIZADO**: Alterado de `['transform']` para `['tool']` para melhor categorização
+  - **COMPATIBILIDADE**: Funciona com versões recentes e nightly builds do n8n (≥ v1.79)
+  - **RECURSOS**: O node pode agora ser chamado diretamente pelo AI Agent como ferramenta
+  - **USO**: Aparecer na lista de ferramentas disponíveis no AI Agent Workflow
+
+### 🔧 Enhanced
+- **Categoria Otimizada**: Node agora aparece na categoria "Tool" para melhor descoberta
+- **AI Integration**: Preparado para uso em workflows automatizados com IA
+- **Estabilidade**: Estrutura limpa com roteamento estático compatível com AI Tools
+
+### 📋 Usage Notes
+- **Versão Necessária**: Requer n8n versão ≥ 1.79 ou nightly builds
+- **Instalação**: Reinstalar node após atualização para reconhecimento pelo AI Agent
+- **Configuração**: Reiniciar n8n após instalação para ativar funcionalidade de Tool
+
 ## [1.0.8] - 2024-12-19
 
 ### 📦 **NPM Package Fixes - Versão Corrigida**
